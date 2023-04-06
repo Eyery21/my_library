@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
+
 {% block content %}
     <h2>Photos</h2>
-    <div class="grid-container">
+    <div class="grid-container container">
         {% for photo in photos %}
             <div class="post">
                 <img src="{{ photo.images.url }}">
                 <p>{{ photo.caption }}</p>
             </div>
+        {% endfor %}
+        
+        {% for comic in one_comic %}
+        <li>
+            <li><a href="{% url 'comic-detail' comic.id %}">{{ comic.title }}</a></li>
+        </li>
         {% endfor %}
     </div>
 {% endblock content %}

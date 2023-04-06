@@ -1,20 +1,25 @@
 from django.db import models
 from django.conf import settings
+
 # Create your models here.
 
 
-
-class  Photo(models.Model):
+class Photo(models.Model):
     images = models.ImageField()
     caption = models.CharField(max_length=128, blank=True)
-    uploader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    uploader = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_ceated = models.DateTimeField(auto_now_add=True)
 
 
 class Blog(models.Model):
-    photo = models.ForeignKey( Photo, null=True, on_delete=models.SET_NULL, blank=True)
+    photo = models.ForeignKey(
+        Photo, null=True, on_delete=models.SET_NULL, blank=True)
     title = models.CharField(max_length=128)
     content = models.CharField(max_length=5000)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     starred = models.BooleanField(default=False)
+
+
