@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Photos</h2>
-    <div class="grid-container container">
+<div class="grid-container container">
+        <h2>Photos</h2>
         {% for photo in photos %}
             <div class="post">
                 <img src="{{ photo.images.url }}">

@@ -1,0 +1,30 @@
+
+body {
+display: flex;
+}
+
+.post {
+    display: flex;
+    margin: 10%;
+    width: 400px;
+    height: 400px;
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+.navbar {
+    background-color: yellow;
+    width: 300px;
+    height: 200px;
+    position: fixed;
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+}
+.container {
+    margin-left: 400px;
+    background-color: blueviolet;
+}
