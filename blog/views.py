@@ -2,11 +2,17 @@ from django.http import HttpResponse
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import redirect, render, get_object_or_404
-from blog.forms import PhotoForm
+from blog.forms import PhotoForm, SearchForm
 from django.core.paginator import Paginator
 
 
 from . import forms, models
+
+
+from django.views.generic import ListView
+from django.db.models import Q
+from .models import Blog
+
 
 
 @login_required
@@ -57,30 +63,32 @@ def blog_and_photo_upload(request):
             photo.uploader = request.user
             photo.save()
             blog = blog_form.save(commit=False)
+            blog.author = request.user
             blog.photo = photo
             blog.save()
-            blog.contributors.add(request.user, through_defaults={'contribution': 'Auteur principal'})
             return redirect('home')
     context = {
         'blog_form': blog_form,
         'photo_form': photo_form,
-        }
+    }
     return render(request, 'blog/create_blog_post.html', context=context)
 
+#### page d'accuile ####
 
 @login_required
 def home(request):
-    photos = models.Photo.objects.all().order_by('-id')
-    blogs_list = models.Blog.objects.all().order_by('-id')
-    paginator = Paginator(blogs_list, 4) # paginer avec 4 éléments par page
-
+    query = request.GET.get('query')### inclut la barre de recherche ####
+    blogs = Blog.objects.all()
+    if query:
+        # Recherche les blogs dont le titre ou le contenu contient la chaîne de recherche
+        blogs = blogs.filter(Q(title__icontains=query) | Q(content__icontains=query))
+    paginator = Paginator(blogs, 3)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    context = {'page_obj': page_obj, 'form': SearchForm(initial={'query': query})}
+    return render(request, 'blog/home.html', context)
 
-    return render(request, 'blog/home.html', {'photos': photos, 'page_obj': page_obj})
 
-
-    
 @login_required
 def view_blog(request, blog_id):
     blog = get_object_or_404(models.Blog, id=blog_id)
@@ -121,3 +129,7 @@ def follow_users(request):
             form.save()
             return redirect('home')
     return render(request, 'blog/follow_users_form.html', context={'form': form})
+
+
+
+

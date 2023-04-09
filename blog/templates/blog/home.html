@@ -2,12 +2,32 @@
 
 {% block content %}
     <h2>Photos</h2>
-    <div class="grid-container container">
+    <div class=" container">
+
+
+        <h1>Recherche de blog</h1>
+
+        <form method="get" action="{% url 'search' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Rechercher</button>
+        </form>
+        
+        {% if blogs %}
+        <ul>
+            {% for blog in blogs %}
+            <li><a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+
+
         {% for blog in page_obj %}
             <div class="post">
                 <a href="{% url 'view_blog' blog.id %}">
                     <h4>Billet : {{ blog.title }}</h4>
-                    <img src="{{ blog.photo.images.url }}">
+                    <img class="images" src="{{ blog.photo.images.url }}">
                 </a>
             </div>
         {% empty %}
@@ -17,7 +37,7 @@
         <div class="pagination">
             <span class="step-links">
                 {% if page_obj.has_previous %}
-                    <a href="?page=1">&laquo; Première page</a>
+                    <a href="?page=1">Première page</a>
                     <a href="?page={{ page_obj.previous_page_number }}">page précédente</a>
                 {% endif %}
 

@@ -36,3 +36,17 @@ class FollowUsersForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['follows']
+
+    
+class SearchForm(forms.Form):
+    
+    query = forms.CharField(
+        label='Recherche',
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Rechercher...',
+            'id': 'search-query',
+            'name': 'query'
+        })
+    )
