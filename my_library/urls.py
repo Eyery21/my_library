@@ -20,7 +20,6 @@ urlpatterns = [
     path('logout', authentication.views.logout_user, name='logout'),# se déconnecter
 
     path('home/', blog.views.home, name='home'),# si ont est connecter
-    path('search/', blog.views.blog_search, name='search'),
     path('photo/upload/', blog.views.photo_upload, name='photo_upload'),# page pour ajouter une photo de profile
     path('profile-photo/upload', authentication.views.upload_profile_photo,
          name='upload_profile_photo'),# page pour changer photo de profile
@@ -28,6 +27,7 @@ urlpatterns = [
     path('blog/create', blog.views.blog_and_photo_upload, name='blog_create'),
     path('blog/<int:blog_id>', blog.views.view_blog, name='view_blog'),
     path('blog/<int:blog_id>/edit', blog.views.edit_blog, name='edit_blog'),
+    path('search/', blog.views.blog_search, name='search'),
 
 
 

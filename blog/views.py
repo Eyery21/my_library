@@ -82,7 +82,9 @@ def home(request):
     if query:
         # Recherche les blogs dont le titre ou le contenu contient la chaîne de recherche
         blogs = blogs.filter(Q(title__icontains=query) | Q(content__icontains=query))
-    paginator = Paginator(blogs, 3)
+
+        #### parametre le nombre d'objet visible par page
+    paginator = Paginator(blogs, 3)####
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {'page_obj': page_obj, 'form': SearchForm(initial={'query': query})}
@@ -132,4 +134,16 @@ def follow_users(request):
 
 
 
+@login_required
+def blog_search(request):
+    try:
+        query = request.GET.get('query')
+        blogs = []
+        if query:
+            # Recherche les blogs dont le titre ou le contenu contient la chaîne de recherche
+            blogs = Blog.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
+        context = {'blogs': blogs, 'form': SearchForm(initial={'query': query})}
+    except Exception as e:
+        context = {'error': str(e)}
 
+    return render(request, 'blog/home.html', context)
