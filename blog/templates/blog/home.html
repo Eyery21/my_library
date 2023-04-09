@@ -1,19 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="grid-container container">
-        <h2>Photos</h2>
-        {% for photo in photos %}
+    <h2>Photos</h2>
+    <div class="grid-container container">
+        {% for blog in page_obj %}
             <div class="post">
-                <img src="{{ photo.images.url }}">
-                <p>{{ photo.caption }}</p>
+                <a href="{% url 'view_blog' blog.id %}">
+                    <h4>Billet : {{ blog.title }}</h4>
+                    <img src="{{ blog.photo.images.url }}">
+                </a>
             </div>
+        {% empty %}
+            <p>Aucun billet n'est disponible.</p>
         {% endfor %}
-        
-        {% for comic in one_comic %}
-        <li>
-            <li><a href="{% url 'comic-detail' comic.id %}">{{ comic.title }}</a></li>
-        </li>
-        {% endfor %}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; Première page</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">page précédente</a>
+                {% endif %}
+
+                <span class="current-page">
+                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">page suivante</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Dernière page &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
     </div>
 {% endblock content %}

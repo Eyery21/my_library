@@ -26,5 +26,12 @@ display: flex;
 }
 .container {
     margin-left: 400px;
+    width: 700px;
     background-color: blueviolet;
+}
+.pagination {
+    margin: 15%;
+    padding: 5%;
+    border: 1px solid red;
+
 }

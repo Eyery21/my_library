@@ -22,6 +22,13 @@ urlpatterns = [
          name='upload_profile_photo'),# page pour changer photo de profile
 
     path('blog/create', blog.views.blog_and_photo_upload, name='blog_create'),
+    path('blog/<int:blog_id>', blog.views.view_blog, name='view_blog'),
+    path('blog/<int:blog_id>/edit', blog.views.edit_blog, name='edit_blog'),
+
+
+
+
+    path('follow-users/', blog.views.follow_users, name='follow_users'), #formulaire pour suivre un utilisateur
 
 ]
 
