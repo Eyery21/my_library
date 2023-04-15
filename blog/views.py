@@ -31,10 +31,36 @@ def photo_upload(request):
     return render(request, 'blog/photo_upload.html', context={'form': form})
 
 
-# @login_required
-# def home(request):
-#     photos = models.Photo.objects.all()
-#     return render(request, 'blog/home.html', context={'photos': photos})
+
+#### page d'accuile ####
+
+def home(request):
+    query = request.GET.get('query')
+    blogs = Blog.objects.all()
+    if query:
+        # Recherche les blogs dont le titre ou le contenu contient la chaîne de recherche
+        blogs = blogs.filter(Q(title__icontains=query) | Q(content__icontains=query))
+    paginator = Paginator(blogs, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj': page_obj, 'form': SearchForm(initial={'query': query})}
+    return render(request, 'blog/home.html', context)
+
+
+@login_required
+def blog_search(request):
+    try:
+        query = request.GET.get('query')
+        blogs = []
+        if query:
+            # Recherche les blogs dont le titre ou le contenu contient la chaîne de recherche
+            blogs = Blog.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
+        context = {'blogs': blogs, 'form': SearchForm(initial={'query': query})}
+    except Exception as e:
+        context = {'error': str(e)}
+
+    return render(request, 'blog/home.html', context)
+
 
 
 @login_required
@@ -51,6 +77,9 @@ def upload_profile_photo(request):
             return redirect('home')
     return render(request, 'blog/Profile.html', context={'form': form})
 
+
+
+#### CRUD BLOG ####
 @login_required
 def blog_and_photo_upload(request):
     blog_form = forms.BlogForm()
@@ -73,22 +102,6 @@ def blog_and_photo_upload(request):
     }
     return render(request, 'blog/create_blog_post.html', context=context)
 
-#### page d'accuile ####
-
-@login_required
-def home(request):
-    query = request.GET.get('query')### inclut la barre de recherche ####
-    blogs = Blog.objects.all()
-    if query:
-        # Recherche les blogs dont le titre ou le contenu contient la chaîne de recherche
-        blogs = blogs.filter(Q(title__icontains=query) | Q(content__icontains=query))
-
-        #### parametre le nombre d'objet visible par page
-    paginator = Paginator(blogs, 3)####
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj': page_obj, 'form': SearchForm(initial={'query': query})}
-    return render(request, 'blog/home.html', context)
 
 
 @login_required
@@ -134,16 +147,3 @@ def follow_users(request):
 
 
 
-@login_required
-def blog_search(request):
-    try:
-        query = request.GET.get('query')
-        blogs = []
-        if query:
-            # Recherche les blogs dont le titre ou le contenu contient la chaîne de recherche
-            blogs = Blog.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
-        context = {'blogs': blogs, 'form': SearchForm(initial={'query': query})}
-    except Exception as e:
-        context = {'error': str(e)}
-
-    return render(request, 'blog/home.html', context)
