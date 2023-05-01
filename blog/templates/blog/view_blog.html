@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 
 
-<!-- {% block content %}
+{% block content %}
     <div class="container">
 
-        <h2>{{ blog.title }}</h2>
-        <p><a href="{% url 'edit_blog' blog.id %}">Modifier le billet</a></p>
-        <img class="images" src="{{ blog.photo.images.url }}">
-        <p>{{ blog.photo.caption }}</p>
-        <p>{{ blog.content }}</p>
+        <h2>{{ comics.title }}</h2>
+        <p><a href="{% url 'edit_blog' comics.id %}">sup le billet</a></p>
+        <p><a href="{% url 'update_blog' comics.id %}">Modifier le billet</a></p>
+
+        <img class="images" src="{{ comics.photo.images.url }}">
+
+        <p>{{ comics.content }}</p>
+        <p>{{ comics.seriescomics.category }}</p>
+
     </div>
-{% endblock content %} -->
+{% endblock content %}
 

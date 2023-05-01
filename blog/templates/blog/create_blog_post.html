@@ -2,8 +2,9 @@
 {% block content %}
     <h2>Écrire un billet</h2>
     <form  class="container" method="post" enctype="multipart/form-data">
-        {{ blog_form.as_p }}
+        {{ comic_form.as_p }}
         {{ photo_form.as_p }}
+        {{ comic_form.one_shot }}
         {% csrf_token %}
         <button type="submit" >Publier</button>
     </form>

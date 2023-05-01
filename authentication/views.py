@@ -9,6 +9,17 @@ from django.core.paginator import Paginator
 
 from . import forms
 
+# def home(request):
+
+#     paginator = Paginator(blogs_and_photos, 6)
+    
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+#     context = {'page_obj': page_obj}
+#     return render(request, 'blog/home.html')
+
+
+
 def login_page(request):
     form = forms.LoginForm()
     message = ''
@@ -30,17 +41,8 @@ def login_page(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('login')
+    return redirect('/')
 
-@login_required # bloque l'accès aux utilisateurs non connecté
-def home(request):
-
-    paginator = Paginator(blogs_and_photos, 6)
-    
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj': page_obj}
-    return render(request, 'blog/home.html')
 
 
 def signup_page(request):

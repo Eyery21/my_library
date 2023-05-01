@@ -1,0 +1,10 @@
+{% for comic in comics %}
+    <div class="post">
+        <a href="{% url 'view_comics' blog.id %}">
+            <h4>Billet : {{ comics.title }}</h4>
+            <img class="images" src="{{ comics.photo.images.url }}">
+        </a>
+    </div>
+
+    
+{% endfor %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="post">
+            <a href="{% url 'view_comics' comic.id %}">
+                <h4>Billet : {{ comic.title }}</h4>
+                <img class="images" src="{{ comic.photo.images.url }}">
+            </a>
+        </div>
+    </div>
+{% endblock content %}

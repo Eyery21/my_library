@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% for comics in comics %}
+            {% if comics.category == 'New 52' %}
+                <div class="post">
+                    {% if comics.id %}
+                        <a href="{% url 'view_comics' comics.id %}">
+                            <h4>Billet : {{ comics.title }}</h4>
+                            <img class="images" src="{{ comics.photo.images.url }}">
+                        </a>
+                    {% else %}
+                        <p>Cet objet Comics n'a pas d'ID</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% empty %}
+            <p>Aucun comics à afficher</p>
+        {% endfor %}
+    </div>
+{% endblock content %}

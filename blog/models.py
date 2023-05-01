@@ -12,17 +12,6 @@ class Photo(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_ceated = models.DateTimeField(auto_now_add=True)
     IMAGE_MAX_SIZE = (800, 800)
-    
-    # def resize_image(self):
-    #     image = Image.open(self.image)
-    #     image.thumbnail(self.IMAGE_MAX_SIZE)
-    #     # sauvegarde de l’image redimensionnée dans le système de fichiers
-    #     # ce n’est pas la méthode save() du modèle !
-    #     image.save(self.image.path)
-
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     self.resize_image()
 
 class Blog(models.Model):
     photo = models.ForeignKey(
@@ -44,6 +33,29 @@ class BlogContributor(models.Model):
     
     class Meta:
         unique_together = ('contributor', 'blog')
+
+
+class Comics(models.Model):
+    photo = models.ForeignKey(
+        Photo, null=True, on_delete=models.SET_NULL, blank=True)
+    title = models.CharField(max_length=128)
+    content = models.CharField(max_length=5000)
+    one_shot = models.BooleanField(default=False)
+    first_comics = models.BooleanField(default=False)
+    author = models.CharField(max_length=128)
+    category = models.CharField(max_length=50, default='Other')
+    hero = models.CharField(max_length=50, default='Other')
+
+
+
+    def __str__(self):
+        return f'{self.title}'
+
+class SeriesComics(Comics):
+    pass
+class Characters(Comics):
+    pass
+
 
 
 class Post(models.Model):

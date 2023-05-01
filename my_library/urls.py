@@ -19,14 +19,27 @@ urlpatterns = [
     path('login/', authentication.views.login_page, name='login'),# se connecter
     path('logout', authentication.views.logout_user, name='logout'),# se déconnecter
 
+    path('', blog.views.base, name='base' ),
     path('home/', blog.views.home, name='home'),# si ont est connecter
     path('photo/upload/', blog.views.photo_upload, name='photo_upload'),# page pour ajouter une photo de profile
     path('profile-photo/upload', authentication.views.upload_profile_photo,
          name='upload_profile_photo'),# page pour changer photo de profile
 
     path('blog/create', blog.views.blog_and_photo_upload, name='blog_create'),
-    path('blog/<int:blog_id>', blog.views.view_blog, name='view_blog'),
-    path('blog/<int:blog_id>/edit', blog.views.edit_blog, name='edit_blog'),
+
+    path('blog/<int:comics_id>', blog.views.view_blog, name='view_comics'),
+
+    path('blog/one_shot/', blog.views.one_shot, name='one_shot'),
+
+
+    path('blog/series_comics/', blog.views.list_series_comics, name='series_comics'),
+    path('blog/rebirth/', blog.views.category_rebirth, name='rebirth'),
+    path('blog/New_52/', blog.views.category_52, name='New 52'),
+    path('blog/Superman/', blog.views.category_heros, name='Superman'),
+
+    path('blog/<int:comics_id>/update', blog.views.update, name='update_blog'),
+
+    path('blog/<int:comics_id>/edit', blog.views.delete, name='edit_blog'),
     path('search/', blog.views.blog_search, name='search'),
 
 

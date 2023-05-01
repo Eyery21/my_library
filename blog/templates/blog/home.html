@@ -1,40 +1,64 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Photos</h2>
     <div class=" container">
 
+        <div class="search">
+            
+            <h1>Recherche de blog</h1>
+    
+            {% block content2 %}
+                {% include 'blog/partials/search_bar.html' %}
 
-        <h1>Recherche de blog</h1>
-
-        <form method="get" action="{% url 'search' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Rechercher</button>
-        </form>
-
-        <p><a href="{% url 'blog_create' %}">Écrire un billet</a></p>
-        {% if blogs %}
-        <ul>
-            {% for blog in blogs %}
-            <div class="post">
-                <a href="{% url 'view_blog' blog.id %}">
-                    <h4>Billet : {{ blog.title }}</h4>
-                    <img class="images" src="{{ blog.photo.images.url }}">
-                </a>
-            </div>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        {% for blog in page_obj %}
-        <div class="post">
-            <a href="{% url 'view_blog' blog.id %}">
-                <h4>Billet : {{ blog.title }}</h4>
-                <img class="images" src="{{ blog.photo.images.url }}">
-            </a>
+            {% if comics %}
+                <h2>Résultats de la recherche</h2>
+                <ul>
+                    {% for comics in comics %}
+                        {% include 'blog/partials/blog_snippet.html' with page_obj=page_obj %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% endblock %}
         </div>
-    {% empty %}
+
+        <ul>
+            <li>
+                <p><a href="{% url 'blog_create' %}">Écrire un billet</a></p>
+
+            </li>
+            <li>
+                <p><a href="{% url 'one_shot' %}">Les one-shot</a></p>
+
+            </li>
+            <li>
+                <p><a href="{% url 'series_comics' %}">les séries</a></p>
+
+            </li>
+            <li>
+                <p><a href="{% url 'rebirth' %}">La série Rebirth</a></p>
+            </li>
+            <li>
+                <p><a href="{% url 'New 52' %}">La série renaissance</a></p>
+            </li>
+            <li>
+                <p><a href="{% url 'Superman' %}">Superman</a></p>
+            </li>
+        </ul>
+
+
+                {% for comics in page_obj %}
+                
+                    {% include 'blog/partials/blog_snippet.html' with page_obj=page_obj %}
+
+                {% empty %}
+                
+             {% if blogs %}
+                <ul>
+                    {% for blog in blogs %}
+                    {% include 'blog/partials/search_snippet.html' with blogs=blogs %}
+                    {% endfor %}
+                </ul>
+        {% endif %}
             <p>Aucun billet n'est disponible.</p>
         {% endfor %}
 
