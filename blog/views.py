@@ -9,6 +9,8 @@ from blog.forms import PhotoForm, SearchForm, ComicForm
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.forms import formset_factory
+from django.contrib.auth import get_user_model
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
@@ -56,6 +58,14 @@ def home(request):
     context = {'page_obj': page_obj, 'form': SearchForm(initial={'query': query})}
     return render(request, 'blog/home.html', context)
 
+#### SEARCH ####
+
+@login_required
+def view_profile(request):
+    User = get_user_model()
+    user = get_object_or_404(User, id=request.user.id)
+    comics = Comics.objects.filter(author=request.user, posseded=True) | Comics.objects.filter(author=request.user, want=True)
+    return render(request, 'authentication/profile.html', {'user': user, 'comics':comics})
 
 def blog_search(request):
     try:
@@ -71,24 +81,71 @@ def blog_search(request):
     return render(request, 'blog/home.html', context)
 
 
+@login_required
+def view_blog(request, comics_id):
+    comics = get_object_or_404(models.Comics, id=comics_id)
+
+    if request.method == 'POST':
+        category = request.POST['category']
+        if category == 'posseded':
+            comics.posseded = True
+            comics.save()
+            request.user.comics_set.add(comics)
+        elif category == 'want':
+            comics.want = True
+            comics.save()
+            request.user.want_set.add(comics)
+
+    return render(request, 'blog/view_blog.html', {'comics': comics})
+
+
+
+@login_required
+def one_shot(request):
+    comics = Comics.objects.all().filter(one_shot=True)
+    return render(request, 'blog/search/one_shot.html', {'comics': comics})
+
+@login_required
+def list_series_comics(request):
+    comics = SeriesComics.objects.filter(one_shot=False, first_comics=True)
+    return render(request, 'blog/search/series_comics.html', {'comics': comics})   
+
+def category_rebirth(request):
+    comics = Comics.objects.filter(category='Rebirth').order_by('id')
+    return render(request, 'blog/search/rebirth.html', {'comics': comics})
+
+def category_52(request):
+    comics = Comics.objects.filter(category='New 52').order_by('title')
+    return render(request, 'blog/search/New_52.html', {'comics': comics})
+
+def category_heros(request):
+    comics = Comics.objects.filter(hero='Superman').order_by('title')
+    return render(request, 'blog/search/Superman.html', {'comics': comics})
+
+def category_BL(request):
+    comics = Comics.objects.filter(category='Black Label').order_by('title')
+    return render(request, 'blog/search/Black_Label.html', {'comics': comics})
+
+def posseded(request):
+    comics =Comics.objects.filter(posseded=True)
+    return render(request, 'blog/search/posseded.html', {'comics': comics})
+
+def want(request):
+    comics =Comics.objects.filter(want=True)
+    return render(request, 'blog/search/want.html', {'comics': comics})
+#### CRUD BLOG ####
 
 @login_required
 def blog_and_photo_upload(request):
-    # blog_form = forms.BlogForm()
     comic_form = forms.ComicForm()
     photo_form = forms.PhotoForm()
     if request.method == 'POST':
-        # blog_form = forms.BlogForm(request.POST)
         photo_form = forms.PhotoForm(request.POST, request.FILES)
         comic_form = forms.ComicForm(request.POST, request.FILES)
         if all([comic_form.is_valid(), photo_form.is_valid()]):
             photo = photo_form.save(commit=False)
             photo.uploader = request.user
             photo.save()
-            # blog = blog_form.save(commit=False)
-            # blog.author = request.user
-            # blog.photo = photo
-            # blog.save()
             comic = comic_form.save(commit=False)
             comic.author = request.user
             comic.photo = photo
@@ -103,8 +160,39 @@ def blog_and_photo_upload(request):
     return render(request, 'blog/create_blog_post.html', context=context)
 
 
+# @login_required
+# def multiple_create(request):
+#     ComicFormSet = formset_factory(forms.ComicForm, extra=2)
+#     comic_form = forms.ComicForm()
+#     photo_form = forms.PhotoForm()
+#     formset = ComicFormSet()
+#     if request.method == 'POST':
+#         comic_form = forms.ComicForm(request.POST, request.FILES)
+#         photo_form = forms.PhotoForm(request.POST, request.FILES)
+#         formset = ComicFormSet(request.POST, request.FILES)
+#         if all([comic_form.is_valid(), photo_form.is_valid(), formset.is_valid()]):
+#             photo = photo_form.save(commit=False)
+#             photo.uploader = request.user
+#             photo.save()
+#             comic = comic_form.save(commit=False)
+#             comic.author = request.user
+#             comic.photo = photo
+#             comic.save()
+#             for form in formset:
+#                 if form.cleaned_data:
+#                     photo = form.save(commit=False)
+#                     photo.uploader = request.user
+#                     photo.save()
+#             return redirect('home')
+#     context = {
+#         'formset': formset,
+#         'comic_form': comic_form,
+#         'photo_form': photo_form,
+#     }
+#     return render(request, 'blog/multiple_create.html', context=context)
 
-#### CRUD BLOG ####
+
+
 
 @login_required
 def update(request, comics_id):
@@ -146,34 +234,6 @@ def delete(request, comics_id):
 
 
 
-@login_required
-def view_blog(request, comics_id):
-    comics = get_object_or_404(models.Comics, id=comics_id)
-    return render(request, 'blog/view_blog.html', {'comics': comics})
-
-
-#### SEARCH ####
-@login_required
-def one_shot(request):
-    comics = Comics.objects.all().filter(one_shot=True)
-    return render(request, 'blog/search/one_shot.html', {'comics': comics})
-
-@login_required
-def list_series_comics(request):
-    comics = SeriesComics.objects.filter(one_shot=False, first_comics=True)
-    return render(request, 'blog/search/series_comics.html', {'comics': comics})   
-
-def category_rebirth(request):
-    comics = Comics.objects.filter(category='Rebirth').order_by('id')
-    return render(request, 'blog/search/rebirth.html', {'comics': comics})
-
-def category_52(request):
-    comics = Comics.objects.filter(category='New 52').order_by('title')
-    return render(request, 'blog/search/New_52.html', {'comics': comics})
-
-def category_heros(request):
-    comics = Comics.objects.filter(hero='Superman').order_by('title')
-    return render(request, 'blog/search/Superman.html', {'comics': comics})
 
 #modifie et suprrime un post avec un formulaire
 

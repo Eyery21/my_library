@@ -33,6 +33,7 @@ class ComicForm(forms.ModelForm):
         ('Rebirth', 'Rebirth'),
         ('New 52', 'New 52'), 
         ('Pre-Crisis', 'Pre-Crisis'),
+        ('Black Label', 'Black Label')
     ]))
 
     hero = forms.CharField(max_length=50, required=True, widget=forms.Select(choices=[
@@ -42,13 +43,13 @@ class ComicForm(forms.ModelForm):
 
     class Meta:
         model = Comics
-        fields = ['title', 'content', 'one_shot', 'first_comics', 'category', 'hero']
+        fields = ['title', 'content', 'one_shot','posseded','want', 'first_comics', 'category', 'hero']
 
 
 class ComicsModif(forms.ModelForm):
     class Meta:
         model = Comics
-        fields = ['title', 'content', 'one_shot', 'first_comics', 'category', 'hero']
+        fields = ['title', 'content', 'one_shot','posseded','want', 'first_comics', 'category', 'hero']
 
 class DeleteBlogForm(forms.Form):
     comics_id = forms.IntegerField(widget=forms.HiddenInput)

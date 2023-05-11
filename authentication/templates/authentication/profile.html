@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Bienvenue sur votre profil</h1>
+    <p><a href="{% url 'blog_create' %}">Écrire un billet</a></p>
+    <p><a href="{% url 'home' %}">Retour à l'acceuil</a></p>
+    {% if comics %}
+        <ul>
+            <h2>Ma bibliothèque</h2>
+            {% for comic in comics %}
+                {% if comic.posseded %}
+                <p>les comics que je possèdent</p>
+
+                    <li>
+                        <div class="post">
+                            {% if comic.id %}
+                                <a href="{% url 'view_comics' comic.id %}">
+                                    <h4>{{ comic.title }}</h4>
+                                    <img class="images" src="{{ comic.photo.images.url }}">
+                                </a>
+                            {% else %}
+                                <p>Cet objet Comics n'a pas d'ID</p>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endif %}
+            {% empty %}
+                <p>Aucun comics possédé à afficher</p>
+            {% endfor %}
+        </ul>
+        <ul>
+            <h2>Vos envies de lecture</h2>
+            {% for comic in comics %}
+                {% if comic.want %}
+                <p>les comics que je voudraient</p>
+
+                    <li>
+                        <div class="post">
+                            {% if comic.id %}
+                                <a href="{% url 'view_comics' comic.id %}">
+                                    <h4>{{ comic.title }}</h4>
+                                    <img class="images" src="{{ comic.photo.images.url }}">
+                                </a>
+                            {% else %}
+                                <p>Cet objet Comics n'a pas d'ID</p>
+                            {% endif %}
+                        </div>
+                        <form method="post" action="{% url 'remove_comics' comics_id=comic.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Enlever ce comics de ma liste</button>
+                        </form>
+                    </li>
+                {% endif %}
+            {% empty %}
+                <p>Aucun comics souhaité à afficher</p>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun comics à afficher</p>
+    {% endif %}
+</div>
+{% endblock content %}

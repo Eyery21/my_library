@@ -25,18 +25,30 @@ urlpatterns = [
     path('profile-photo/upload', authentication.views.upload_profile_photo,
          name='upload_profile_photo'),# page pour changer photo de profile
 
+    path('profile/', blog.views.view_profile, name='profile'),
+    path('remove_comics/<int:comics_id>', authentication.views.remove_comics, name='remove_comics'),
+    path('all_profile/', authentication.views.all_profile, name='all_profile'),
+    path('view_profile/<int:user_id>', authentication.views.view_profile, name='view_profile'),
+
+
+
     path('blog/create', blog.views.blog_and_photo_upload, name='blog_create'),
+    
+    # path('blog/multiple_create', blog.views.multiple_create, name='multiple_create'),
 
     path('blog/<int:comics_id>', blog.views.view_blog, name='view_comics'),
 
     path('blog/one_shot/', blog.views.one_shot, name='one_shot'),
 
-
+    path('blog/Posseded/', blog.views.posseded, name='posseded'),
+    path('blog/Want/', blog.views.want, name='want'),
     path('blog/series_comics/', blog.views.list_series_comics, name='series_comics'),
     path('blog/rebirth/', blog.views.category_rebirth, name='rebirth'),
     path('blog/New_52/', blog.views.category_52, name='New 52'),
     path('blog/Superman/', blog.views.category_heros, name='Superman'),
+    path('blog/Black_Label', blog.views.category_BL, name='BL'),
 
+    
     path('blog/<int:comics_id>/update', blog.views.update, name='update_blog'),
 
     path('blog/<int:comics_id>/edit', blog.views.delete, name='edit_blog'),

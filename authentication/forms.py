@@ -12,7 +12,7 @@ class LoginForm(forms.Form):
 class SignupForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = get_user_model()
-        fields = ['username', 'email', 'first_name', 'role']
+        fields = ['username', 'email', 'first_name']
 
 
 

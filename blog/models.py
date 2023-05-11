@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from PIL import Image
+from django.contrib.auth import get_user_model
+
+
 
 # Create your models here.
 
@@ -45,6 +48,9 @@ class Comics(models.Model):
     author = models.CharField(max_length=128)
     category = models.CharField(max_length=50, default='Other')
     hero = models.CharField(max_length=50, default='Other')
+    posseded = models.BooleanField(default=False)
+    want = models.BooleanField(default=False)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
 
 

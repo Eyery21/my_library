@@ -14,6 +14,7 @@
                 <h2>Résultats de la recherche</h2>
                 <ul>
                     {% for comics in comics %}
+                    
                         {% include 'blog/partials/blog_snippet.html' with page_obj=page_obj %}
                     {% endfor %}
                 </ul>
@@ -22,12 +23,17 @@
         </div>
 
         <ul>
+
             <li>
-                <p><a href="{% url 'blog_create' %}">Écrire un billet</a></p>
+                <p><a href="{% url 'one_shot' %}">Les one-shot</a></p>
 
             </li>
             <li>
-                <p><a href="{% url 'one_shot' %}">Les one-shot</a></p>
+                <p><a href="{% url 'posseded' %}">Ceux que je ossède</a></p>
+
+            </li>
+            <li>
+                <p><a href="{% url 'want' %}">Ceux que je veux</a></p>
 
             </li>
             <li>
@@ -42,6 +48,9 @@
             </li>
             <li>
                 <p><a href="{% url 'Superman' %}">Superman</a></p>
+            </li>
+            <li>
+                <p><a href="{% url 'BL' %}">Blacl Label</a></p>
             </li>
         </ul>
 

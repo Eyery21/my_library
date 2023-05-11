@@ -3,16 +3,24 @@
 
 {% block content %}
     <div class="container">
+        <p><a href="{% url 'home' %}">Retour à l'acceuil</a></p>
 
         <h2>{{ comics.title }}</h2>
-        <p><a href="{% url 'edit_blog' comics.id %}">sup le billet</a></p>
-        <p><a href="{% url 'update_blog' comics.id %}">Modifier le billet</a></p>
-
+        {% if user.is_authenticated and user.is_superuser %}
+            <p><a href="{% url 'edit_blog' comics.id %}">sup le billet</a></p>
+            <p><a href="{% url 'update_blog' comics.id %}">Modifier le billet</a></p>
+        {% endif %}
         <img class="images" src="{{ comics.photo.images.url }}">
 
         <p>{{ comics.content }}</p>
         <p>{{ comics.seriescomics.category }}</p>
 
-    </div>
+        <form method="post" action="{% url 'view_comics' comics_id=comics.id %}">
+            {% csrf_token %}
+            <button type="submit" name="category" value="posseded">J'ai déjà ce comics</button>
+            <button type="submit" name="category" value="want">Je voudrais cce comics</button>
+        </form>
+        
+        </div>
 {% endblock content %}
 
