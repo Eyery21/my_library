@@ -34,6 +34,7 @@
                             <p>Cet objet Comics n'a pas d'ID</p>
                         {% endif %}
                     </div>
+                    
                 </li>
             {% endif %}
         {% empty %}
@@ -57,10 +58,6 @@
                             <p>Cet objet Comics n'a pas d'ID</p>
                         {% endif %}
                     </div>
-                    <form method="post" action="{% url 'remove_comics' comics_id=comic.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Enlever ce comics de ma liste</button>
-                    </form>
                 </li>
             {% endif %}
         {% empty %}
